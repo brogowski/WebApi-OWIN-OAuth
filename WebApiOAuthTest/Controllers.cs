@@ -90,7 +90,7 @@ namespace WebApiOAuthTest
                 return BadRequest(Uri.EscapeDataString(error));
             }
 
-            if (!User.Identity.IsAuthenticated)
+            if (User == null || !User.Identity.IsAuthenticated)
             {
                 return new ChallengeResult(provider, this);
             }
@@ -131,15 +131,8 @@ namespace WebApiOAuthTest
         }
 
         [AllowAnonymous]
-        [Route("RegisterExternal")]
         public async Task<IHttpActionResult> Post(RegisterExternalBindingModel model)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var verifiedAccessToken = await VerifyExternalAccessToken(model.Provider, model.ExternalAccessToken);
             if (verifiedAccessToken == null)
             {
@@ -239,9 +232,7 @@ namespace WebApiOAuthTest
                 return "client_Id is required";
             }
 
-            //var client = _repo.FindClient(clientId);
-
-            if (!UserRepo.Users.ContainsKey(clientId)) //client == null)
+            if (clientId != "JsTest")
             {
                 return string.Format("Client_id '{0}' is not registered in the system.", clientId);
             }

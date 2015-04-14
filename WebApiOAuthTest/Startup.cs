@@ -14,8 +14,8 @@ namespace WebApiOAuthTest
         {
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseGoogleAuthentication((GoogleAuthOptions = GetGoogleAuthOptions()));
             app.UseOAuthBearerAuthentication((OAuthBearerOptions = GetOAuthOptions()));
+            app.UseGoogleAuthentication((GoogleAuthOptions = GetGoogleAuthOptions()));
 
             app.UseWebApi(GetWebApiConfig());
         }
