@@ -1,7 +1,14 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http.Formatting;
+using System.Web.Http;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json.Serialization;
 using Owin;
+using WebApiOAuthTest.Authorization;
+using WebApiOAuthTest.ExternalAuthorization;
 
 namespace WebApiOAuthTest
 {
@@ -12,21 +19,40 @@ namespace WebApiOAuthTest
 
         public void Configuration(IAppBuilder app)
         {
+            ConfigureOAuth(app);
+            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+            app.UseWebApi(GetWebApiConfig());
+        }
+
+        private void ConfigureOAuth(IAppBuilder app)
+        {
+            app.UseOAuthAuthorizationServer(GetOAuthServerOptions());
+            app.UseOAuthBearerAuthentication((OAuthBearerOptions = GetOAuthOptions()));
+
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseOAuthBearerAuthentication((OAuthBearerOptions = GetOAuthOptions()));
             app.UseGoogleAuthentication((GoogleAuthOptions = GetGoogleAuthOptions()));
+        }
 
-            app.UseWebApi(GetWebApiConfig());
+        private static OAuthAuthorizationServerOptions GetOAuthServerOptions()
+        {
+            return new OAuthAuthorizationServerOptions()
+            {
+                AllowInsecureHttp = true,
+                TokenEndpointPath = new PathString("/token"),
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
+                Provider = new SimpleAuthorizationServerProvider(),
+                RefreshTokenProvider = new SimpleRefreshTokenProvider()
+            };
         }
 
         private GoogleOAuth2AuthenticationOptions GetGoogleAuthOptions()
         {
             return new GoogleOAuth2AuthenticationOptions
             {
-                ClientId = "xxx",
-                ClientSecret = "xxx",
-                Provider = new GoogleAuthProvider()
+                ClientId = "x",
+                ClientSecret = "x",
+                Provider = new ClaimsBasedGoogleAuthenticationProvider()
             };
         }
 
@@ -38,13 +64,17 @@ namespace WebApiOAuthTest
         private HttpConfiguration GetWebApiConfig()
         {
             HttpConfiguration config = new HttpConfiguration();
+
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new {id = RouteParameter.Optional}
                 );
+
             return config;
         }
-
     }
 }

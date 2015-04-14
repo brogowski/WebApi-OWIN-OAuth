@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -7,77 +6,16 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using WebApiOAuthTest.Authorization;
+using WebApiOAuthTest.DAL;
+using WebApiOAuthTest.ExternalAuthorization;
 
-namespace WebApiOAuthTest
+namespace WebApiOAuthTest.Controllers
 {
-    public class LoginController : ApiController
-    {
-        public IHttpActionResult Post(string userName, string password)
-        {
-            if(UserRepo.Users.Contains(new KeyValuePair<string, string>(userName, password)))
-                return Ok(GenerateAccessToken(userName));
-
-            return Unauthorized();
-        }
-
-        public static JObject GenerateAccessToken(string userName)
-        {
-            var tokenExpiration = TimeSpan.FromDays(1);
- 
-            ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
- 
-            identity.AddClaim(new Claim(ClaimTypes.Name, userName));
-            identity.AddClaim(new Claim(ClaimTypes.Role, "user"));
- 
-            var props = new AuthenticationProperties
-            {
-                IssuedUtc = DateTime.UtcNow,
-                ExpiresUtc = DateTime.UtcNow.Add(tokenExpiration),
-            };
- 
-            var ticket = new AuthenticationTicket(identity, props);            
-
-            var accessToken = Startup.OAuthBearerOptions.AccessTokenFormat.Protect(ticket);
-
-            return new JObject(
-                new JProperty("userName", userName),
-                new JProperty("access_token", accessToken),
-                new JProperty("token_type", "bearer"),
-                new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString()),
-                new JProperty(".issued", ticket.Properties.IssuedUtc.ToString()),
-                new JProperty(".expires", ticket.Properties.ExpiresUtc.ToString()));
-        }
-    }
-
-    public class RegisterController : ApiController
-    {
-        public IHttpActionResult Post(string userName, string password)
-        {
-            UserRepo.RegisterUser(userName, password);
-
-            return Ok();
-        }
-    }
-
-    public class ContentController : ApiController
-    {
-        [Authorize(Roles = "user")]
-        public string Get()
-        {           
-            return "You are authorized";
-        }
-    }
-
     public class ExternalLoginController : ApiController
     {
-        private IAuthenticationManager Authentication
-        {
-            get { return Request.GetOwinContext().Authentication; }
-        }  
-
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]
@@ -92,10 +30,10 @@ namespace WebApiOAuthTest
 
             if (User == null || !User.Identity.IsAuthenticated)
             {
-                return new ChallengeResult(provider, this);
+                return new ChallengeResult(provider, Request);
             }
 
-            var redirectUriValidationResult = ValidateClientAndRedirectUri(this.Request, ref redirectUri);
+            var redirectUriValidationResult = ValidateClientAndRedirectUri(Request, ref redirectUri);
 
             if (!string.IsNullOrWhiteSpace(redirectUriValidationResult))
             {
@@ -111,13 +49,11 @@ namespace WebApiOAuthTest
 
             if (externalLogin.LoginProvider != provider)
             {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                return new ChallengeResult(provider, this);
+                Request.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+                return new ChallengeResult(provider, Request);
             }
 
-            //IdentityUser user = await _repo.FindAsync(new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey));
-
-            bool hasRegistered = true;//user != null;
+            var hasRegistered = UserRepo.ValidateLogin(new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey));
 
             redirectUri = string.Format("{0}#external_access_token={1}&provider={2}&haslocalaccount={3}&external_user_name={4}",
                                             redirectUri,
@@ -139,36 +75,24 @@ namespace WebApiOAuthTest
                 return BadRequest("Invalid Provider or External Access Token");
             }
 
-            //IdentityUser user = await _repo.FindAsync(new UserLoginInfo(model.Provider, verifiedAccessToken.user_id));
+            var user = UserRepo.ValidateLogin(new UserLoginInfo(model.Provider, verifiedAccessToken.UserId));
 
-            bool hasRegistered = false;//user != null;
-
-            if (hasRegistered)
+            if (user != null)
             {
                 return BadRequest("External user is already registered");
             }
 
-            //user = new IdentityUser() { UserName = model.UserName };
+            UserRepo.RegisterUser(model.UserName, null);
 
-            //IdentityResult result = await _repo.CreateAsync(user);
-            //if (!result.Succeeded)
-            //{
-            //    return GetErrorResult(result);
-            //}
-
-            var info = new ExternalLoginInfo()
+            var info = new ExternalLoginInfo
             {
                 DefaultUserName = model.UserName,
                 Login = new UserLoginInfo(model.Provider, verifiedAccessToken.UserId)
             };
 
-            //result = await _repo.AddLoginAsync(user.Id, info.Login);
-            //if (!result.Succeeded)
-            //{
-            //    return GetErrorResult(result);
-            //}
+            UserRepo.AddLoginAsync(model.UserName, info.Login);
 
-            var accessTokenResponse = LoginController.GenerateAccessToken(model.UserName);
+            var accessTokenResponse = AccessTokenGenerator.GenerateAccessToken(model.UserName);
 
             return Ok(accessTokenResponse);
         }
@@ -190,17 +114,14 @@ namespace WebApiOAuthTest
                 return BadRequest("Invalid Provider or External Access Token");
             }
 
-            //IdentityUser user = await _repo.FindAsync(new UserLoginInfo(provider, verifiedAccessToken.user_id));
+            var user = UserRepo.ValidateLogin(new UserLoginInfo(provider, verifiedAccessToken.UserId));
 
-            bool hasRegistered = true;//user != null;
-
-            if (!hasRegistered)
+            if (user == null)
             {
                 return BadRequest("External user is not registered");
             }
 
-            //generate access token response
-            var accessTokenResponse = LoginController.GenerateAccessToken("");//user.UserName);
+            var accessTokenResponse = AccessTokenGenerator.GenerateAccessToken(user.UserName);
 
             return Ok(accessTokenResponse);
 
@@ -211,7 +132,7 @@ namespace WebApiOAuthTest
 
             Uri redirectUri;
 
-            var redirectUriString = GetQueryString(Request, "redirect_uri");
+            var redirectUriString = GetQueryString(request, "redirect_uri");
 
             if (string.IsNullOrWhiteSpace(redirectUriString))
             {
@@ -232,15 +153,17 @@ namespace WebApiOAuthTest
                 return "client_Id is required";
             }
 
-            if (clientId != "JsTest")
+            var client = ClientRepo.FindClient(clientId);
+
+            if (client == null)
             {
                 return string.Format("Client_id '{0}' is not registered in the system.", clientId);
             }
 
-            //if (!string.Equals(client.AllowedOrigin, redirectUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase))
-            //{
-            //    return string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId);
-            //}
+            if (client.AllowedOrigin != "*" && !string.Equals(client.AllowedOrigin, redirectUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId);
+            }
 
             redirectUriOutput = redirectUri.AbsoluteUri;
 
@@ -254,7 +177,7 @@ namespace WebApiOAuthTest
 
             if (queryStrings == null) return null;
 
-            var match = queryStrings.FirstOrDefault(keyValue => string.Compare(keyValue.Key, key, true) == 0);
+            var match = queryStrings.FirstOrDefault(keyValue => String.Compare(keyValue.Key, key, StringComparison.OrdinalIgnoreCase) == 0);
 
             if (string.IsNullOrEmpty(match.Value)) return null;
 
@@ -265,7 +188,7 @@ namespace WebApiOAuthTest
         {
             ParsedExternalAccessToken parsedToken = null;
 
-            var verifyTokenEndPoint = "";
+            string verifyTokenEndPoint;
 
             if (provider == "Google")
             {
@@ -284,7 +207,7 @@ namespace WebApiOAuthTest
             {
                 var content = await response.Content.ReadAsStringAsync();
 
-                dynamic jObj = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(content);
+                dynamic jObj = (JObject)JsonConvert.DeserializeObject(content);
 
                 parsedToken = new ParsedExternalAccessToken();
 
@@ -308,10 +231,10 @@ namespace WebApiOAuthTest
 
         private class ExternalLoginData
         {
-            public string LoginProvider { get; set; }
-            public string ProviderKey { get; set; }
-            public string UserName { get; set; }
-            public string ExternalAccessToken { get; set; }
+            public string LoginProvider { get; private set; }
+            public string ProviderKey { get; private set; }
+            public string UserName { get; private set; }
+            public string ExternalAccessToken { get; private set; }
 
             public static ExternalLoginData FromIdentity(ClaimsIdentity identity)
             {
