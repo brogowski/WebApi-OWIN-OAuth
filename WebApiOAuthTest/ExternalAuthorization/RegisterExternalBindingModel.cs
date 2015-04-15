@@ -1,4 +1,4 @@
-﻿namespace WebApiOAuthTest.ExternalAuthorization
+﻿namespace FullOAuth.ExternalAuthorization
 {
     public class RegisterExternalBindingModel
     {

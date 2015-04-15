@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiOAuthTest", "WebApiOAuthTest\WebApiOAuthTest.csproj", "{6F6C8763-33D0-4C56-959A-ECAA941BE4E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth", "WebApiOAuthTest\FullOAuth.csproj", "{6F6C8763-33D0-4C56-959A-ECAA941BE4E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DF9D686F-0C77-4E35-BA66-789081A4FA6A}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DF9D68
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWebApi", "ConsoleWebApi\ConsoleWebApi.csproj", "{7C8FDA1D-8E02-41C5-80F1-472D7457EEF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Google", "FullOAuth.Google\FullOAuth.Google.csproj", "{F41CAABF-E5FB-4E38-991D-3D2953E3778A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +26,14 @@ Global
 		{6F6C8763-33D0-4C56-959A-ECAA941BE4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F6C8763-33D0-4C56-959A-ECAA941BE4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F6C8763-33D0-4C56-959A-ECAA941BE4E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C8FDA1D-8E02-41C5-80F1-472D7457EEF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C8FDA1D-8E02-41C5-80F1-472D7457EEF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C8FDA1D-8E02-41C5-80F1-472D7457EEF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C8FDA1D-8E02-41C5-80F1-472D7457EEF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

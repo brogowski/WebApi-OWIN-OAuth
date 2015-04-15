@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace WebApiOAuthTest.ExternalAuthorization
+namespace FullOAuth.ExternalAuthorization
 {
-    public class ChallengeResult : IHttpActionResult
+    class ChallengeResult : IHttpActionResult
     {
         private readonly string _loginProvider;
         private readonly HttpRequestMessage _request;
