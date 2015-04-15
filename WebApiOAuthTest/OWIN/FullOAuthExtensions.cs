@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using FullOAuth.AuthorizationServer.Extensions;
 using FullOAuth.DAL;
-using FullOAuth.ExternalAuthorization.Extensions;
-using Owin;
 
 namespace FullOAuth.OWIN
 {
@@ -13,11 +11,5 @@ namespace FullOAuth.OWIN
         public IUserAccessValidator AccessValidator { get; set; }
         public IRefreshTokenRepo RefreshTokenRepo { get; set; }
         public IEnumerable<IExternalProvider> ExternalProviders { get; set; }
-    }
-
-    public interface IExternalProvider
-    {
-        void Setup(IAppBuilder app);
-        IExternalProviderTokenValidator GetTokenValidator();
     }
 }

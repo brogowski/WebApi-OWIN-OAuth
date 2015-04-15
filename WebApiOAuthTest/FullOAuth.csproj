@@ -109,6 +109,7 @@
     <Compile Include="ExternalAuthorization\ExternalUserLoginInfo.cs" />
     <Compile Include="OWIN\FullOAuthExtensions.cs" />
     <Compile Include="OWIN\FullOAuthSettings.cs" />
+    <Compile Include="OWIN\IExternalProvider.cs" />
     <Compile Include="OWIN\OwinExtensions.cs" />
     <Compile Include="Properties\Constants.cs" />
     <Compile Include="ExternalAuthorization\Extensions\IAccessTokenGenerator.cs" />

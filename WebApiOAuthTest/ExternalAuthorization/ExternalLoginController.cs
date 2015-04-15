@@ -24,13 +24,13 @@ namespace FullOAuth.ExternalAuthorization
 
         protected ExternalLoginController(IExternalUserAccessValidator userAccessValidator,
             IExternalUserProvider externalUserProvider, IClientRepo clientRepo,
-            IAccessTokenGenerator accessTokenGenerator)
+            IClaimsProvider claimsProvider)
         {
             _providerTokenValidators = OwinExtensions.ExternalProviders.Select(q => q.GetTokenValidator());
+            _accessTokenGenerator = OwinExtensions.GetAccessTokenGenerator(claimsProvider);
             _userAccessValidator = userAccessValidator;
             _externalUserProvider = externalUserProvider;
             _clientRepo = clientRepo;
-            _accessTokenGenerator = accessTokenGenerator;
         }
 
         protected async Task<IHttpActionResult> ExternalLoginAsync(string provider, string error = null)

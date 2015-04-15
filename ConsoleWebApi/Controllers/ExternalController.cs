@@ -3,13 +3,12 @@ using System.Web.Http;
 using ConsoleWebApi.BL;
 using ConsoleWebApi.DAL;
 using FullOAuth.ExternalAuthorization;
-using FullOAuth.ExternalAuthorization.Bearer;
 
 namespace ConsoleWebApi.Controllers
 {
     public class ExternalController : ExternalLoginController
     {
-        public ExternalController() : base(new UserRepo(), new UserRepo(), new ClientRepo(), new OAuthBearerAccessTokenGenerator(new SimpleClaimsProvider()))
+        public ExternalController() : base(new UserRepo(), new UserRepo(), new ClientRepo(), new SimpleClaimsProvider())
         {
         }
 

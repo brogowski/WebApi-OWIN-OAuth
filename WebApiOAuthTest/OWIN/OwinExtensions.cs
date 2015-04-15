@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FullOAuth.AuthorizationServer;
+using FullOAuth.ExternalAuthorization.Bearer;
+using FullOAuth.ExternalAuthorization.Extensions;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
@@ -16,6 +18,11 @@ namespace FullOAuth.OWIN
         {
             ConfigureOAuth(app, settings, extensions);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+        }
+
+        internal static IAccessTokenGenerator GetAccessTokenGenerator(IClaimsProvider claimsProvider)
+        {
+            return new OAuthBearerAccessTokenGenerator(OAuthBearerOptions, claimsProvider);
         }
 
         private static void ConfigureOAuth(IAppBuilder app, FullOAuthSettings settings, FullOAuthExtensions extensions)

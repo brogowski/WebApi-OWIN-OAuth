@@ -2,26 +2,19 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using FullOAuth.ExternalAuthorization.Extensions;
-using FullOAuth.OWIN;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 
 namespace FullOAuth.ExternalAuthorization.Bearer
 {
-    public class OAuthBearerAccessTokenGenerator : IAccessTokenGenerator
+    class OAuthBearerAccessTokenGenerator : IAccessTokenGenerator
     {
         private readonly OAuthBearerAuthenticationOptions _bearerAuthenticationOptions;
         private readonly IClaimsProvider _claimsProvider;
 
-        public OAuthBearerAccessTokenGenerator(IClaimsProvider claimsProvider)
+        public OAuthBearerAccessTokenGenerator(OAuthBearerAuthenticationOptions authenticationOptions, IClaimsProvider claimsProvider)
         {
-            _bearerAuthenticationOptions = OwinExtensions.OAuthBearerOptions;
-
-            if (_bearerAuthenticationOptions == null)
-            {
-                throw new InvalidOperationException("UseFullOAuth has not been called on OWIN AppBuilder.");
-            }
-
+            _bearerAuthenticationOptions = authenticationOptions;
             _claimsProvider = claimsProvider;
         }
 
