@@ -4,6 +4,7 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using ConsoleWebApi.BL;
 using ConsoleWebApi.DAL;
+using FullOAuth.Facebook;
 using FullOAuth.Google;
 using FullOAuth.OWIN;
 using Newtonsoft.Json.Serialization;
@@ -31,7 +32,8 @@ namespace ConsoleWebApi
                 RefreshTokenRepo = new RefreshTokenRepo(),
                 ExternalProviders = new IExternalProvider[] 
                 {
-                    new GoogleOAuth2ExternalProvider("xxx", "xxx")
+                    new GoogleOAuth2ExternalProvider("xxx", "xxx"),
+                    new FacebookExternalProvider("xxx", "xxx", "xxx")
                 }
             };
         }

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FullOAuth.ExternalAuthorization;
 using FullOAuth.ExternalAuthorization.Extensions;
 using Microsoft.Owin.Security.Google;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FullOAuth.Google
 {
-    class GoogleOAuth2TokenValidator : IExternalProviderTokenValidator
+    class GoogleOAuth2TokenValidator : AbstractExternalTokenValidator
     {
         private const string ProviderName = "Google";
         private const string GoogleTokenValidationUrlFormat = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}";
@@ -23,38 +20,32 @@ namespace FullOAuth.Google
             _googleAuthenticationOptions = authenticationOptions;
         }
 
-        public bool CanValidate(string provider)
+        protected override ParsedExternalAccessToken ParseExternalToken(JObject jObj)
         {
-            return ProviderName == provider;
-        }
+            dynamic dynamicObj = jObj;
 
-        public async Task<ParsedExternalAccessToken> ParseExternalTokenAsync(string accessToken)
-        {
-            var verifyTokenEndPoint = string.Format(GoogleTokenValidationUrlFormat, accessToken);
-
-            var client = new HttpClient();
-            var uri = new Uri(verifyTokenEndPoint);
-            var response = await client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
+            var parsedToken = new GoogleOAuth2ParsedExternalAccessToken
             {
-                var content = await response.Content.ReadAsStringAsync();
+                UserId = dynamicObj[UserIdKey],
+                AppId = dynamicObj[AppIdKey]
+            };
 
-                dynamic jObj = (JObject) JsonConvert.DeserializeObject(content);
-
-                var parsedToken = new GoogleOAuth2ParsedExternalAccessToken
-                {
-                    UserId = jObj[UserIdKey],
-                    AppId = jObj[AppIdKey]
-                };
-
-                if (string.Equals(_googleAuthenticationOptions.ClientId, parsedToken.AppId, StringComparison.OrdinalIgnoreCase))
-                {
-                    return parsedToken;
-                }
+            if (string.Equals(_googleAuthenticationOptions.ClientId, parsedToken.AppId, StringComparison.OrdinalIgnoreCase))
+            {
+                return parsedToken;
             }
 
             return null;
+        }
+
+        protected override string GetVerifyTokenEndPointUrl(string accessToken)
+        {
+            return string.Format(GoogleTokenValidationUrlFormat, accessToken);
+        }
+
+        protected override string GetProviderName()
+        {
+            return ProviderName;
         }
 
         private class GoogleOAuth2ParsedExternalAccessToken : ParsedExternalAccessToken

@@ -105,6 +105,7 @@
     <Compile Include="AuthorizationServer\Extensions\IHashingProvider.cs" />
     <Compile Include="DAL\IRefreshTokenRepo.cs" />
     <Compile Include="AuthorizationServer\Extensions\IUserAccessValidator.cs" />
+    <Compile Include="ExternalAuthorization\Extensions\AbstractExternalTokenValidator.cs" />
     <Compile Include="ExternalAuthorization\ExternalAuthorizationAttribute.cs" />
     <Compile Include="ExternalAuthorization\ExternalUserLoginInfo.cs" />
     <Compile Include="OWIN\FullOAuthExtensions.cs" />

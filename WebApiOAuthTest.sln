@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWebApi", "ConsoleWeb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Google", "FullOAuth.Google\FullOAuth.Google.csproj", "{F41CAABF-E5FB-4E38-991D-3D2953E3778A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Facebook", "FullOAuth.Facebook\FullOAuth.Facebook.csproj", "{8140BE27-8078-45C8-992E-D1ED59B0AABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41CAABF-E5FB-4E38-991D-3D2953E3778A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
