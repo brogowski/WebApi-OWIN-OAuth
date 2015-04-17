@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Google", "FullOAu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Facebook", "FullOAuth.Facebook\FullOAuth.Facebook.csproj", "{8140BE27-8078-45C8-992E-D1ED59B0AABC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullOAuth.Microsoft", "FullOAuth.MicrosoftAccount\FullOAuth.Microsoft.csproj", "{A5116035-EF5A-4A3D-94FC-DD0BB9E17482}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IISWebApi", "IISWebApi\IISWebApi.csproj", "{D83AC59C-122A-4200-A9E8-54FE9480E174}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,14 @@ Global
 		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8140BE27-8078-45C8-992E-D1ED59B0AABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5116035-EF5A-4A3D-94FC-DD0BB9E17482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5116035-EF5A-4A3D-94FC-DD0BB9E17482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5116035-EF5A-4A3D-94FC-DD0BB9E17482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5116035-EF5A-4A3D-94FC-DD0BB9E17482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D83AC59C-122A-4200-A9E8-54FE9480E174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D83AC59C-122A-4200-A9E8-54FE9480E174}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D83AC59C-122A-4200-A9E8-54FE9480E174}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D83AC59C-122A-4200-A9E8-54FE9480E174}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

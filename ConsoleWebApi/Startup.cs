@@ -6,6 +6,7 @@ using ConsoleWebApi.BL;
 using ConsoleWebApi.DAL;
 using FullOAuth.Facebook;
 using FullOAuth.Google;
+using FullOAuth.Microsoft;
 using FullOAuth.OWIN;
 using Newtonsoft.Json.Serialization;
 using Owin;
@@ -14,7 +15,6 @@ namespace ConsoleWebApi
 {
     public class Startup
     {
-
         public void Configuration(IAppBuilder app)
         {
             app.UseFullOAuth(GetSettings(), GetExtensions());
@@ -33,7 +33,8 @@ namespace ConsoleWebApi
                 ExternalProviders = new IExternalProvider[] 
                 {
                     new GoogleOAuth2ExternalProvider("xxx", "xxx"),
-                    new FacebookExternalProvider("xxx", "xxx", "xxx")
+                    new FacebookExternalProvider("xxx", "xxx", "xxx"),
+                    new MicrosoftExternalProvider("xxx","xxx")
                 }
             };
         }

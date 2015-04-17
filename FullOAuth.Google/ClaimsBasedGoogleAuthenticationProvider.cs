@@ -9,7 +9,8 @@ namespace FullOAuth.Google
     {
         public override Task Authenticated(GoogleOAuth2AuthenticatedContext context)
         {
-            context.Identity.AddClaim(new Claim(Constants.ExternalAccessTokenKey, context.AccessToken));
+            context.Identity.AddClaim(new Claim(Constants.ExternalAccessTokenKey, context.AccessToken,
+                null, "Google"));
             return base.Authenticated(context);
         }
     }

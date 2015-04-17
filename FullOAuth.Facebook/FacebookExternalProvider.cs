@@ -38,7 +38,7 @@ namespace FullOAuth.Facebook
         {
             return new FacebookAuthenticationOptions
             {
-                Provider = new FacebookAuthProvider(),
+                Provider = new ClaimsBasedFacebookAuthenticationProvider(),
                 AppId = _appId,
                 AppSecret = _appSecret
             };

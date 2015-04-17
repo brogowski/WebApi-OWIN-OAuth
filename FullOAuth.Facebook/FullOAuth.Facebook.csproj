@@ -59,7 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FacebookAuthProvider.cs" />
+    <Compile Include="ClaimsBasedFacebookAuthenticationProvider.cs" />
     <Compile Include="FacebookExternalProvider.cs" />
     <Compile Include="FacebookTokenValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
