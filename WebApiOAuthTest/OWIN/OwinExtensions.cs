@@ -47,7 +47,7 @@ namespace FullOAuth.OWIN
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString(settings.TokenEndpointPath),
                 AccessTokenExpireTimeSpan = settings.AccessTokenExpireTimeSpan,
-                Provider = new SimpleAuthorizationServerProvider(extensions.ClientRepo, extensions.Hasher, extensions.AccessValidator),
+                Provider = new SimpleAuthorizationServerProvider(extensions.ClientRepo, extensions.Hasher, extensions.AccessValidator, extensions.CliamsProvider),
                 RefreshTokenProvider = new SimpleRefreshTokenProvider(extensions.Hasher, extensions.RefreshTokenRepo)
             };
         }

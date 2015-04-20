@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FullOAuth.AuthorizationServer.Extensions;
 using FullOAuth.DAL;
 using FullOAuth.DAL.Models;
+using FullOAuth.ExternalAuthorization.Extensions;
 using FullOAuth.Properties;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
@@ -15,13 +16,15 @@ namespace FullOAuth.AuthorizationServer
         private readonly IClientRepo _clientRepo;
         private readonly IHashingProvider _hasher;
         private readonly IUserAccessValidator _userAccessValidator;
+        private readonly IClaimsProvider _claimsProvider;
 
         public SimpleAuthorizationServerProvider(IClientRepo clientRepo, IHashingProvider hasher,
-            IUserAccessValidator userAccessValidator)
+            IUserAccessValidator userAccessValidator, IClaimsProvider claimsProvider)
         {
             _clientRepo = clientRepo;
             _hasher = hasher;
             _userAccessValidator = userAccessValidator;
+            _claimsProvider = claimsProvider;
         }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
@@ -93,8 +96,7 @@ namespace FullOAuth.AuthorizationServer
             }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
-            identity.AddClaim(new Claim(ClaimTypes.Role, "user"));
+            _claimsProvider.SetClaimsForUser(context.UserName, identity);
 
             var props = new AuthenticationProperties(new Dictionary<string, string>
             {

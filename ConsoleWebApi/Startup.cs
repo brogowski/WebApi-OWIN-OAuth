@@ -30,6 +30,7 @@ namespace ConsoleWebApi
                 AccessValidator = new UserRepo(),
                 ClientRepo = new ClientRepo(),
                 RefreshTokenRepo = new RefreshTokenRepo(),
+                CliamsProvider = new SimpleClaimsProvider(),
                 ExternalProviders = new IExternalProvider[] 
                 {
                     new GoogleOAuth2ExternalProvider("xxx", "xxx"),
